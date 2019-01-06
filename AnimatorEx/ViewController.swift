@@ -26,7 +26,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var sourceView: UIView!
     @IBOutlet weak var destView: UIView!
     @IBOutlet weak var transitionView: UIView!
-    
+    var transitionAnimator: UIViewPropertyAnimator?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         destView.layer.cornerRadius = 8
@@ -49,20 +50,20 @@ class ViewController: UIViewController {
     
     @objc private func viewTapped(recognizer: UITapGestureRecognizer) {
         print("tapped")
-        let state = currentState.opposite
-        let transitionAnimator = UIViewPropertyAnimator(duration: 1, dampingRatio: 1, animations: {
+        transitionAnimator = UIViewPropertyAnimator(duration: 1, dampingRatio: 1, animations: {
+            let state = self.currentState.opposite
             switch state {
             case .focused:
                 self.transitionView.morphRectTo(self.destView)
                 self.currentState = state
             case .unfocused:
-                self.transitionView.morphRectTo(self.destView)
+                self.transitionView.morphRectTo(self.sourceView)
                 self.currentState = state
             }
             self.view.layoutIfNeeded()
         })
-
-        transitionAnimator.startAnimation()
+        
+        transitionAnimator?.startAnimation()
     }
     
 }
